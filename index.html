@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tik Tak tok Game</title>
+</head>
+<style>
+    *{
+    margin: 0;
+    padding: 0;
+    background-color: rgb(38, 42,59);
+
+}
+nav{
+    background-color: rgb(85, 8, 173);
+    color: white;
+    height: 70px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+}
+nav ul{
+    list-style-type: none;
+}
+.gamecontainer{
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    color: white;
+}
+.container{
+    display: grid;
+    grid-template-rows: repeat(3, 10vw);
+    grid-template-columns: repeat(3, 10vw);
+    color: white;
+}
+.imgbox img{
+    width: 0;
+    transition: width Is ease-in-out;
+}
+.box{
+    border: 2px solid white;
+    font-size: 4vw;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    justify-content: center;
+}
+.box:hover{
+    background-color: rgb(210, 153, 210);
+}
+.gameInfo{
+    padding: 0 40px;
+    font-size: 30px;
+}
+.bt{
+    border-top: 0px;
+}
+.bl{
+    border-left: 0px;
+}
+.br{
+    border-right: 0px;
+}
+.bb{
+    border-bottom: 0px;
+}
+#reset{
+    /* background-color: white;
+    color: black;
+    height: 100px;
+    width: 100px;
+    font-size: larger;
+    margin: auto;
+    cursor: pointer;
+    border-radius: 20px;
+    padding-bottom: 10px;
+    align-items: center; */
+    width: 90px;
+    height: 50px;
+    color: white;
+    background-color: whtie;
+    border-radius: 5px;
+    border: 2px solid black;
+    font-size: 26px;
+    margin: auto;
+    display: flex;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 600px;
+    bottom: 50px;
+}
+#reset:hover{
+    background-color: black;
+    color: white;
+}
+#h1{
+    display: flex;
+    margin: 10px;
+}
+#game{
+    color: rgb(23, 227, 23);
+}
+#infoh1{
+    color: transparent;
+    -webkit-text-stroke: 2px rgb(23, 227, 23);
+}
+@media screen and (max-width: 800px)
+{
+    .gamecontainer{
+        flex-wrap: wrap;
+    }
+    .gameInfo{
+        margin-top: 34px;
+    }
+    .gameInfo h1{
+        font-size: 1.5rem;
+    }
+    .container{
+        display: grid;
+        grid-template-rows: repeat(3, 20vw);
+        grid-template-columns: repeat(3, 20vw);
+    }
+}
+</style>
+<body>
+    <nav>
+        <ul>
+            <li>Katti-Zero Game</li>
+            <!-- <li>Whatsapp</li>
+            <li>Gmail</li> -->
+        </ul>
+    </nav>
+    <div class="gamecontainer">
+        <div class="container">
+            <div class="box  bl bt"><span class="boxtext"></span></div>
+            <div class="box bt"><span class="boxtext"></span></div>
+            <div class="box br bt"><span class="boxtext"></span></div>
+            <div class="box bl"><span class="boxtext"></span></div>
+            <div class="box"><span class="boxtext"></span></div>
+            <div class="box br"><span class="boxtext"></span></div>
+            <div class="box bl bb"><span class="boxtext"></span></div>
+            <div class="box bb"><span class="boxtext"></span></div>
+            <div class="box br bb"><span class="boxtext"></span></div>
+        </div>
+        <div class="gameInfo">
+            <div id="h1">
+                <h1 id="game">Game</h1>
+                <h1 id="infoh1">Info</h1>
+            </div>
+            <div class="imgandtext">
+                <span class="info">Turn for : X</span>
+                <div class="imgbox">
+                    <img src="excited.gif" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+    <button id="reset">Reset</button>
+    <script>
+        console.log("welcome to tik tok game")
+let music = new Audio("music.mp3")
+let ting = new Audio("ting.mp3")
+let gameover = new Audio("gameover.mp3")
+let turn = "X"
+let ingameover = false;
+//function to change turn
+const changeTurn = () =>{
+    return turn === "X" ? "0" : "X"
+}
+
+//Function to check the winner
+const checkWin=() =>{
+    let boxtext = document.getElementsByClassName("boxtext");
+    let wins = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+    ]
+    wins.forEach(e =>{
+        if((boxtext[e[0]].innerHTML === boxtext[e[1]].innerHTML) && (boxtext[e[2]].innerHTML === boxtext[e[1]].innerHTML) && (boxtext[e[0]].innerHTML !== "")){
+            document.querySelector('.info').innerHTML = boxtext[e[0]].innerHTML + " Won"
+            ingameover = true
+            document.querySelector('.imgbox').getElementsByTagName('img')[0].style.width = '200px';
+        }
+    })
+}
+//Game logic
+let boxes = document.getElementsByClassName("box");
+Array.from(boxes).forEach(element =>{
+    let boxtext = element.querySelector('.boxtext') 
+    element.addEventListener('click', ()=>{
+        if(boxtext.innerText === ''){
+            boxtext.innerText = turn;
+            turn = changeTurn();
+            ting.play();
+            checkWin();
+            if(!ingameover){
+                document.getElementsByClassName("info")[0].innerHTML= "Turn for : " + turn;
+            }
+        }
+    })
+})
+
+//Add onclick on reset button
+reset.addEventListener('click',() =>{
+    let boxtext = document.querySelectorAll('.boxtext');
+    Array.from(boxtext).forEach(element =>{
+        element.innerText = ""
+    });
+    if('click' === 6){
+        console.log("six time clicked")
+    }
+    turn = "X";
+    document.getElementsByClassName("info")[0].innerHTML= "Turn for : " + turn;
+    document.querySelector('.imgbox').getElementsByTagName('img')[0].style.width = '0px';
+})
+    </script>
+</body>
+</html>
